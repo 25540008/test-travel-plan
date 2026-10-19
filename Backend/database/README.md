@@ -6,11 +6,11 @@ Thư mục này chứa sơ đồ thiết kế cơ sở dữ liệu (ERD) và fil
 ![Sơ đồ ERD](./ERD_travel_planner.jpeg)
 
 ## 2. Cấu trúc các bảng chính
-*`users`: Lưu thông tin tài khoản người dùng (họ tên, email, mật khẩu mã hóa).
-*`destinations`: Lưu danh sách các điểm đến nổi bật trên trang chủ và tọa độ bản đồ.
-*`trips`: Lưu thông tin chuyến đi, ngân sách dự kiến, quyền riêng tư (`is_public`), lịch trình gợi ý từ AI (`ai_itinerary`) và ID chuyến gốc khi người dùng bấm "Dùng lại" (`cloned_from_id`).
-*`itinerary_items`: Lưu danh sách các hoạt động chi tiết theo từng ngày và khung giờ của mỗi chuyến đi.
-*`expenses`: Lưu các khoản chi tiêu thực tế theo 6 danh mục (`TRANSPORT`, `ACCOMMODATION`, `FOOD`, `SIGHTSEEING`, `SHOPPING`, `OTHER`).
+1. `users`: Lưu thông tin tài khoản người dùng (họ tên, email, mật khẩu mã hóa).
+2. `destinations`: Lưu danh sách các điểm đến nổi bật trên trang chủ và tọa độ bản đồ.
+3. `trips`: Lưu thông tin chuyến đi, ngân sách dự kiến, quyền riêng tư (`is_public`), lịch trình gợi ý từ AI (`ai_itinerary`) và ID chuyến gốc khi người dùng bấm "Dùng lại" (`cloned_from_id`).
+4. `itinerary_items`: Lưu danh sách các hoạt động chi tiết theo từng ngày và khung giờ của mỗi chuyến đi.
+5. `expenses`: Lưu các khoản chi tiêu thực tế theo 6 danh mục (`TRANSPORT`, `ACCOMMODATION`, `FOOD`, `SIGHTSEEING`, `SHOPPING`, `OTHER`).
 
 ## 3. Hướng dẫn cài đặt trên XAMPP cho thành viên nhóm
 1. Mở XAMPP Control Panel, nhấn Start tại `Apache` và `MySQL`.
