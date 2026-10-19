@@ -3,7 +3,7 @@
 Thư mục này chứa sơ đồ thiết kế cơ sở dữ liệu (ERD) và file khởi tạo SQL cho hệ thống.
 
 ## 1. Sơ đồ Thực thể Liên kết (ERD)
-![Sơ đồ ERD](./ERD_travel-planner.png)
+![Sơ đồ ERD](./ERD_travel-planner.jpeg)
 
 ## 2. Cấu trúc các bảng chính
 *`users`: Lưu thông tin tài khoản người dùng (họ tên, email, mật khẩu mã hóa).
