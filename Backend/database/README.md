@@ -1,4 +1,6 @@
-# Cơ sở dữ liệu TravelPlan (MySQL - XAMPP)
+# Cơ sở dữ liệu TravelPlan
+
+> Từ Sprint 1, cấu trúc bảng chính thức nằm ở `Backend/prisma/schema.prisma` (PostgreSQL, tạo bảng bằng `npx prisma migrate dev`, xem README ở gốc repo). File `travel_planner.sql` dưới đây là thiết kế ban đầu cho MySQL/XAMPP, giữ lại để tham khảo; schema Prisma giữ đúng tên bảng và cột của file này, thêm cột `users.role`.
 
 Thư mục này chứa sơ đồ thiết kế cơ sở dữ liệu (ERD) và file khởi tạo SQL cho hệ thống.
 
