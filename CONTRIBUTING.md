@@ -36,16 +36,16 @@ Mốc: demo nội bộ cuối S2 (04/11), đóng băng tính năng cuối S4 (18
 
 1. Code khớp luồng hoạt động và bảng Business Rules của use case trong SRS.
 2. Giao diện khớp màn hình thiết kế (Screen 1–14), hiển thị đúng thông báo MSG.
-3. PR đã được 1 thành viên khác duyệt và merge vào `develop`; CI xanh.
+3. PR đã được 1 thành viên khác duyệt và merge vào `dev`; CI xanh.
 4. Một thành viên khác đã chạy test case của use case và không còn lỗi P1.
 5. Đã chạy được trên bản deploy Render.
 
 ## Quy ước Git
 
-- Nhánh: `main` (bản phát hành), `develop` (tích hợp), `feature/TP-xx-mo-ta-ngan` cho từng thẻ.
+- Nhánh: `main` (bản phát hành), `dev` (tích hợp), `feature/TP-xx-mo-ta-ngan` cho từng thẻ.
 - Commit: `TP-14: Screen 10 đăng nhập, lưu token` (mã thẻ ở đầu để tra ngược về board).
 - Mô tả PR ghi `Closes #<số issue>` để issue tự đóng và thẻ tự sang Done khi merge.
-- Cuối mỗi sprint merge `develop` vào `main` và gắn tag `v0.x`.
+- Cuối mỗi sprint merge `dev` vào `main` và gắn tag `v0.x`.
 
 ## Label
 

@@ -1,30 +1,20 @@
 import { Router } from 'express';
-import db from '../config/db.js';
-import { askGemini } from '../services/gemini.js';
+import { env } from '../config/env.js';
+import healthRoutes from './health.routes.js';
+import exampleRoutes from './example.routes.js';
+import devRoutes from './dev.routes.js';
 
 const router = Router();
 
-// Kiểm tra server
-router.get('/health', (req, res) => res.json({ status: 'ok' }));
+router.use('/health', healthRoutes);
 
-// Kiểm tra kết nối MySQL
-router.get('/db-test', async (req, res) => {
-  try {
-    const [rows] = await db.query('SELECT 1 + 1 AS result');
-    res.json(rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Gắn router của từng module tại đây, giữ đúng đường dẫn trong SRS mục 8.4, ví dụ:
+// router.use('/auth', authRoutes);
+// router.use('/trips', tripRoutes);
 
-// Kiểm tra Gemini
-router.post('/gemini-test', async (req, res) => {
-  try {
-    const text = await askGemini(req.body.prompt || 'Xin chào');
-    res.json({ text });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+if (!env.isProd) {
+  router.use('/_example', exampleRoutes);
+  router.use('/dev', devRoutes);
+}
 
 export default router;
