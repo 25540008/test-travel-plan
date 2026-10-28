@@ -11,6 +11,7 @@ export const MSG = {
   'MSG 9': 'Bạn thử quá nhiều lần. Vui lòng thử lại sau 15 phút.',
   'MSG 10': 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.',
   'MSG 12': 'Link đặt lại mật khẩu đã hết hạn hoặc đã được dùng.',
+  'MSG 20': 'Tạo tài khoản thành công. Chào mừng bạn đến với Travelplan!',
   'MSG 16': 'Ảnh phải là JPG, PNG hoặc WebP và không quá 5 MB.',
   'MSG 32': 'Ngày về phải bằng hoặc sau ngày đi.',
   'MSG 33': 'Ngân sách phải lớn hơn 0.',
