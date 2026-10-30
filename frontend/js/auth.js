@@ -4,11 +4,14 @@ import { pageUrl } from './config.js';
 const TOKEN_KEY = 'tp_token';
 const USER_KEY = 'tp_user';
 
-export const getToken = () => localStorage.getItem(TOKEN_KEY);
+// UC 2 · BR 9: tick [Ghi nhớ đăng nhập] → localStorage, không tick → sessionStorage (mất khi đóng trình duyệt).
+const read = (key) => localStorage.getItem(key) ?? sessionStorage.getItem(key);
+
+export const getToken = () => read(TOKEN_KEY);
 
 export function getUser() {
   try {
-    return JSON.parse(localStorage.getItem(USER_KEY));
+    return JSON.parse(read(USER_KEY));
   } catch {
     return null;
   }
@@ -16,15 +19,26 @@ export function getUser() {
 
 export const isLoggedIn = () => Boolean(getToken());
 
-/** Gọi sau khi đăng nhập/đăng ký: saveSession(res.token, res.user) */
-export function saveSession(token, user) {
-  localStorage.setItem(TOKEN_KEY, token);
-  localStorage.setItem(USER_KEY, JSON.stringify(user));
+/** Gọi sau khi đăng nhập/đăng ký: saveSession(res.token, res.user, { remember }). Mặc định lưu localStorage (UC 1 · BR 4). */
+export function saveSession(token, user, { remember = true } = {}) {
+  clearSession();
+  const store = remember ? localStorage : sessionStorage;
+  store.setItem(TOKEN_KEY, token);
+  store.setItem(USER_KEY, JSON.stringify(user));
 }
 
+/** Cập nhật thông tin user (ví dụ sau GET /api/auth/me) ở đúng nơi đang giữ token. */
+export function updateUser(user) {
+  const store = localStorage.getItem(TOKEN_KEY) ? localStorage : sessionStorage;
+  store.setItem(USER_KEY, JSON.stringify(user));
+}
+
+/** UC 3 · BR 11: xoá token ở cả localStorage và sessionStorage. */
 export function clearSession() {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_KEY);
+  for (const store of [localStorage, sessionStorage]) {
+    store.removeItem(TOKEN_KEY);
+    store.removeItem(USER_KEY);
+  }
 }
 
 /** next chỉ nhận đường dẫn nội bộ bắt đầu bằng "/" (không nhận "//evil.com"). */

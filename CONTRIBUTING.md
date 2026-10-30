@@ -42,10 +42,57 @@ Mốc: demo nội bộ cuối S2 (04/11), đóng băng tính năng cuối S4 (18
 
 ## Quy ước Git
 
-- Nhánh: `main` (bản phát hành), `dev` (tích hợp), `feature/TP-xx-mo-ta-ngan` cho từng thẻ.
+- Nhánh: `main` (bản phát hành), `dev` (tích hợp), `feature/TP-xx-mo-ta-ngan` cho từng thẻ. Tên nhánh viết thường, không dấu, nối bằng `-`, không có dấu phẩy hay khoảng trắng (đúng: `feature/TP-14-dang-nhap`; sai: `TP-14-Screen-10-Đăng-nhập,-lưu-token`).
+- Không push thẳng lên `main` hay `dev`, luôn đi qua PR.
+- Commit trên web GitHub cũng phải đặt message theo mẫu dưới, không để mặc định "Create …" / "Delete …".
 - Commit: `TP-14: Screen 10 đăng nhập, lưu token` (mã thẻ ở đầu để tra ngược về board).
 - Mô tả PR ghi `Closes #<số issue>` để issue tự đóng và thẻ tự sang Done khi merge.
 - Cuối mỗi sprint merge `dev` vào `main` và gắn tag `v0.x`.
+
+## Quy ước đặt tên file
+
+Quy tắc chung: chữ thường, tiếng Việt **không dấu**, các từ nối bằng `-` (kebab-case). Không đặt mã thẻ (`TP-15-…`), tên người hay chữ `screen5` vào tên file; mã thẻ ghi ở commit và PR.
+
+### Trang (frontend/)
+
+- Mọi trang nằm thẳng trong `frontend/` (không đặt ở gốc repo, không tạo thư mục con), link giữa các trang là link tương đối.
+- Tên file là tên màn hình trong SRS, không dấu. Danh sách chính thức nằm ở `PAGES` trong `frontend/js/config.js`; trang mới phải thêm vào đó trước, rồi mọi chỗ khác gọi `pageUrl('key')` thay vì gõ tay tên file hay đường dẫn tuyệt đối như `/dang-nhap`.
+
+| Màn hình | File | Key trong `PAGES` |
+|---|---|---|
+| Screen 1 Trang chủ | `index.html` | `home` |
+| Screen 2 Lịch trình mẫu | `lich-trinh-mau.html` | `templates` |
+| Screen 3 Điểm đến | `diem-den.html` | `destinations` |
+| Screen 4 Chi tiết điểm đến | `diem-den-chi-tiet.html?slug=` | `destinationDetail` |
+| Screen 5 Chuyến đi của tôi | `chuyen-di-cua-toi.html` | `myTrips` |
+| Screen 6 Tạo chuyến | `tao-chuyen.html` | `createTrip` |
+| Screen 7, 9 Chuyến đi (lịch trình, ngân sách) | `chuyen-di.html?id=` | `trip` |
+| Screen 10 Đăng nhập | `dang-nhap.html` | `login` |
+| Screen 11 Tạo tài khoản | `dang-ky.html` | `register` |
+| Screen 12 Quên mật khẩu | `quen-mat-khau.html` | `forgotPassword` |
+| Đặt mật khẩu mới | `dat-lai-mat-khau.html` | `resetPassword` |
+
+- File bắt đầu bằng `_` là file mẫu, không phải trang thật (ví dụ `_mau-trang.html`). Trang mới chép từ file này.
+
+### CSS và JS (frontend/css, frontend/js)
+
+- Dùng chung trước: `tokens.css`, `base.css`; `api.js`, `auth.js`, `config.js`, `ui.js`, `layout.js`, `messages.js`, `format.js`. Không viết lại header, popup, toast, lưu token… trong từng trang.
+- File riêng của một nhóm màn hình đặt theo chức năng, kebab-case tiếng Anh ngắn gọn như các file chung: ví dụ `css/auth.css` (Screen 10, 11), `js/password.js`. Không đặt `script-TP-15.js`, `TP-15-script.js`.
+- Script riêng của một trang: viết `<script type="module">` ngay trong trang, hoặc tách thành `js/pages/<ten-trang>.js` cùng tên với file HTML (ví dụ `js/pages/chuyen-di.js` cho `chuyen-di.html`).
+- Import luôn dùng đường dẫn tương đối có `./` và đuôi `.js`: `import { api } from './api.js'` (không viết `'js/api.js'`).
+- Token chỉ đọc/ghi qua `auth.js` (key `tp_token`, `tp_user`); không tự đặt key khác như `jwt`, `token`.
+
+### Backend (Backend/src)
+
+- Mỗi module một bộ file cùng tên, theo đúng lớp: `routes/<module>.routes.js`, `controllers/<module>.controller.js`, `services/<module>.service.js`. Tên module tiếng Anh, camelCase nếu nhiều từ (`trip`, `itineraryItem`, `tripAccess`).
+- Middleware và tiện ích: camelCase (`rateLimit.js`, `validators.js`); file chỉ chứa một class đặt PascalCase theo tên class (`AppError.js`).
+- Test: `tests/<module>.test.js`; test cần PostgreSQL thật đặt `<module>.db.test.js`.
+- Đường dẫn API giữ đúng SRS mục 8.4, kebab-case, danh từ số nhiều (`/api/trips/:id/expenses`, `/api/auth/forgot-password`).
+
+### Tài liệu và ảnh
+
+- Ảnh, tài liệu: kebab-case không dấu, ảnh màn hình có số thứ tự Screen ở đầu (`docs/screens/10-dang-nhap.png`, `Backend/database/erd-travel-planner.jpeg`).
+- Ngoại lệ giữ nguyên: file theo quy ước của công cụ (`README.md`, `CONTRIBUTING.md`, `Dockerfile`, `docker-compose.yml`, migration Prisma) và tên bảng, cột trong DB (snake_case như `travel_planner.sql`, `itinerary_items`).
 
 ## Label
 
