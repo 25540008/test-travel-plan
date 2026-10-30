@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo tài khoản - Travelplan</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --error-color: #ef4444;
+            --success-color: #22c55e;
+            --border-color: #cbd5e1;
+            --bg-left: #b48c78;
+            --bg-right: #ffffff;
+            --text-main: #333333;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-right);
+            color: var(--text-main);
+        }
+
+        /* Bố cục 2 cột cho màn hình Desktop (1440px) */
+        .split-layout {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Cột trái: Banner / Illustration */
+        .left-pane {
+            flex: 1;
+            background: linear-gradient(to bottom, #b38570 0%, #c4997e 40%, #548b99 40%, #357283 80%, #d4c2a5 80%, #e2d1b3 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            position: relative;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 60px;
+        }
+
+        .brand-icon {
+            background: white;
+            color: var(--bg-left);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .step-item {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.95rem;
+            width: fit-content;
+        }
+
+        .step-number {
+            background: #fcd34d;
+            color: #000;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        /* Cột phải: Form Đăng ký */
+        .right-pane {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-container h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .form-container p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input.input-error {
+            border-color: var(--error-color);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .error-message a {
+            color: var(--error-color);
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .password-strength {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            background-color: var(--border-color);
+            border-radius: 2px;
+            transition: background-color 0.3s;
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Toast thông báo thành công (MSG 20) */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transform: translateX(150%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive cho Mobile (390px) */
+        @media (max-width: 768px) {
+            .left-pane {
+                display: none; /* Ẩn banner bên trái trên mobile để giống app */
+            }
+            .right-pane {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="split-layout">
+        <!-- Cột trái: UI trang trí -->
+        <div class="left-pane">
+            <div class="brand">
+                <div class="brand-icon">🧭</div>
+                travelplan
+            </div>
+            <div class="left-content">
+                <h1>Lên kèo chuyến đầu<br>tiên trong 3 bước.</h1>
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    Tạo chuyến: điểm đến, ngày đi, ngân sách
+                </div>
+                <div class="step-item">
+                    <span class="step-number">2</span>
+                    Xếp hoạt động cho từng ngày
+                </div>
+                <div class="step-item">
+                    <span class="step-number">3</span>
+                    Ghi chi tiêu, biết còn tiêu được bao nhiêu
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Form -->
+        <div class="right-pane">
+            <div class="form-container">
+                <h2>Tạo tài khoản</h2>
+                <p class="subtitle">Miễn phí. Chỉ bạn thấy được chuyến đi của mình.</p>
+
+                <form id="registerForm" novalidate>
+                    <div class="form-group">
+                        <label for="fullname">Họ và tên</label>
+                        <input type="text" id="fullname" placeholder="Đỗ Dương" maxlength="100">
+                        <div id="fullname-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="duong@gmail.com" maxlength="150">
+                        <div id="email-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" id="password" placeholder="••••••••">
+                        <div class="password-strength">
+                            <div class="strength-bar" id="bar-1"></div>
+                            <div class="strength-bar" id="bar-2"></div>
+                            <div class="strength-bar" id="bar-3"></div>
+                        </div>
+                        <div class="strength-text" id="strength-text">Ít nhất 6 ký tự</div>
+                        <div id="password-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password">Nhập lại mật khẩu</label>
+                        <input type="password" id="confirm_password" placeholder="••••••••">
+                        <div id="confirm_password-error" class="error-message"></div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Tạo tài khoản</button>
+                </form>
+
+                <div class="login-link">
+                    Đã có tài khoản? <a href="dang-nhap.html">Đăng nhập</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast MSG 20 -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // B2: Chuyển hướng nếu đã đăng nhập
+        //if (localStorage.getItem('jwt')) {
+          //  window.location.href = '/screen5.html'; // Tới Screen 5
+        //}
+
+        const form = document.getElementById('registerForm');
+        const passwordInput = document.getElementById('password');
+
+        // Logic thanh sức mạnh mật khẩu (Chỉ gợi ý)
+        passwordInput.addEventListener('input', function(e) {
+            const val = e.target.value;
+            const bar1 = document.getElementById('bar-1');
+            const bar2 = document.getElementById('bar-2');
+            const bar3 = document.getElementById('bar-3');
+            const text = document.getElementById('strength-text');
+            
+            // Reset
+            [bar1, bar2, bar3].forEach(b => b.style.backgroundColor = 'var(--border-color)');
+            text.innerText = 'Ít nhất 6 ký tự';
+
+            if (val.length > 0) {
+                if (val.length < 6) {
+                    bar1.style.backgroundColor = '#ef4444'; // Yếu
+                    text.innerText = 'Quá ngắn';
+                } else if (val.length >= 6 && !/\d/.test(val)) {
+                    bar1.style.backgroundColor = '#f59e0b'; // Vừa
+                    bar2.style.backgroundColor = '#f59e0b';
+                    text.innerText = 'Nên có chữ và số cho an toàn hơn';
+                } else if (val.length >= 6 && /\d/.test(val) && /[a-zA-Z]/.test(val)) {
+                    bar1.style.backgroundColor = '#22c55e'; // Mạnh
+                    bar2.style.backgroundColor = '#22c55e';
+                    bar3.style.backgroundColor = '#22c55e';
+                    text.innerText = 'Mật khẩu mạnh';
+                }
+            }
+        });
+
+        // Hàm xóa thông báo lỗi
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.innerHTML = '';
+            });
+            document.querySelectorAll('input').forEach(el => {
+                el.classList.remove('input-error');
+            });
+        }
+
+        // Hàm hiển thị lỗi
+        function showError(inputId, message) {
+            const inputEl = document.getElementById(inputId);
+            const errorEl = document.getElementById(`${inputId}-error`);
+            
+            inputEl.classList.add('input-error');
+            errorEl.innerHTML = message;
+            errorEl.style.display = 'block';
+        }
+
+        // Xử lý sự kiện rời ô nhập liệu (Blur) theo yêu cầu CBR 1
+        ['fullname', 'email', 'password', 'confirm_password'].forEach(id => {
+            document.getElementById(id).addEventListener('blur', function() {
+                validateField(id);
+            });
+        });
+
+        function validateField(id) {
+            const el = document.getElementById(id);
+            const val = el.value.trim();
+            const errorEl = document.getElementById(`${id}-error`);
+            
+            // Reset error trạng thái hiện tại của trường này
+            el.classList.remove('input-error');
+            errorEl.style.display = 'none';
+
+            // CBR 1: Bắt buộc
+            if (!val) {
+                showError(id, "Trường này là bắt buộc."); // MSG 29
+                return false;
+            }
+
+            if (id === 'fullname' && val.length > 100) {
+                showError(id, "Họ và tên vượt quá 100 ký tự."); // MSG 30
+                return false;
+            }
+
+            if (id === 'email') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(val)) {
+                    showError(id, "Giá trị không đúng định dạng."); // MSG 3
+                    return false;
+                }
+            }
+
+            if (id === 'password') {
+                if (val.length < 6 || val.length > 100) {
+                    showError(id, "Mật khẩu phải từ 6 đến 100 ký tự."); // MSG 4
+                    return false;
+                }
+            }
+
+            if (id === 'confirm_password') {
+                const pass = document.getElementById('password').value;
+                if (val !== pass) {
+                    showError(id, "Mật khẩu nhập lại không khớp."); // MSG 5
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // Xử lý submit form
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearErrors();
+
+            let isValid = true;
+            let firstErrorId = null;
+
+            // Kiểm tra toàn bộ
+            ['fullname', 'email', 'password', 'confirm_password'].forEach(id => {
+                if (!validateField(id)) {
+                    isValid = false;
+                    if (!firstErrorId) firstErrorId = id;
+                }
+            });
+
+            // Focus vào ô lỗi đầu tiên
+            if (!isValid) {
+                document.getElementById(firstErrorId).focus();
+                return;
+            }
+
+            // Dữ liệu hợp lệ -> Mock gọi API B4 / B5
+            const email = document.getElementById('email').value.trim();
+
+            // Mock: Giả lập kiểm tra trùng email trong DB (B5)
+            // Nhập 'duong@gmail.com' để test hiển thị MSG 7
+            if (email.toLowerCase() === 'duong@gmail.com') {
+                showError('email', 'Email này đã có tài khoản. <a href="/dang-nhap">Đăng nhập luôn?</a>'); // MSG 7
+                document.getElementById('email').focus();
+                return;
+            }
+
+            // Mock: Giả lập gọi POST /api/auth/register thành công (B6)
+            try {
+                // Tạo JWT giả lập (có hạn 24h ở logic backend)
+                const mockJWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_token";
+                
+                // Lưu localStorage
+                localStorage.setItem('jwt', mockJWT);
+
+                // Hiển thị MSG 20
+                const toast = document.getElementById('toast');
+                toast.innerText = "Tạo tài khoản thành công. Chào mừng bạn đến với Travelplan!";
+                toast.classList.add('show');
+
+                // Chờ 2 giây rồi chuyển trang
+                setTimeout(() => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const nextUrl = urlParams.get('next');
+                    
+                    if (nextUrl && nextUrl.startsWith('/')) {
+                        window.location.href = nextUrl;
+                    } else {
+                        window.location.href = '/screen5.html'; // Tới Screen 5 mặc định
+                    }
+                }, 2000);
+
+            } catch (err) {
+                console.error("Lỗi hệ thống", err);
+            }
+        });
+    </script>
+</body>
+</html>
