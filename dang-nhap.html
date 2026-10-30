@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Travelplan</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --error-color: #ef4444;
+            --error-bg: #fef2f2;
+            --warning-color: #f59e0b;
+            --border-color: #cbd5e1;
+            --bg-right: #ffffff;
+            --text-main: #333333;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--bg-right);
+            color: var(--text-main);
+        }
+
+        /* Bố cục 2 cột cho Desktop (1440px) */
+        .split-layout {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Cột trái: Hình ảnh điểm đến */
+        .left-pane {
+            flex: 1;
+            background: linear-gradient(to bottom, #9ea392 0%, #4a5d4e 50%, #203a31 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: auto;
+            z-index: 2;
+        }
+
+        .brand-icon {
+            background: white;
+            color: #203a31;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .left-content {
+            z-index: 2;
+            margin-bottom: auto;
+        }
+
+        .left-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .left-content p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            max-width: 80%;
+        }
+
+        .trip-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: fit-content;
+            backdrop-filter: blur(4px);
+        }
+
+        .trip-icon {
+            width: 40px;
+            height: 40px;
+            background: url('icon.png') no-repeat center/contain;
+        }
+
+        .trip-info h4 {
+            margin-bottom: 4px;
+            font-size: 1rem;
+        }
+
+        .trip-info p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+
+        .image-credit {
+            position: absolute;
+            bottom: 20px;
+            left: 40px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            z-index: 2;
+        }
+
+        /* Cột phải: Form Đăng nhập */
+        .right-pane {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-container h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .form-container p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        /* Hộp thông báo lỗi chung (MSG 6, MSG 9) */
+        .global-error {
+            background-color: var(--error-bg);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input.input-error {
+            border-color: var(--error-color);
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Cảnh báo Caps Lock */
+        .caps-lock-warning {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            color: var(--warning-color);
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.85rem;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .btn-submit:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+        }
+
+        .links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Responsive cho Mobile (390px) */
+        @media (max-width: 768px) {
+            .left-pane {
+                display: none;
+            }
+            .right-pane {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="split-layout">
+        <!-- Cột trái: Hình ảnh điểm đến -->
+        <div class="left-pane">
+            <div class="brand">
+                <div class="brand-icon">🧭</div>
+                travelplan
+            </div>
+            <div class="left-content">
+                <h1>Chuyến đi đang chờ<br>bạn.</h1>
+                <p>Đăng nhập để xem lịch trình từng ngày, quỹ chung và những chuyến bạn đã lưu.</p>
+                
+                <div class="trip-card">
+                    <div class="trip-icon"></div>
+                    <div class="trip-info">
+                        <h4>Hội An cùng lớp UIT</h4>
+                        <p>Còn 17 ngày • 9 hoạt động</p>
+                    </div>
+                </div>
+            </div>
+            <div class="image-credit">Ảnh: Đà Lạt, Lâm Đồng</div>
+        </div>
+
+        <!-- Cột phải: Form đăng nhập -->
+        <div class="right-pane">
+            <div class="form-container">
+                <h2>Đăng nhập</h2>
+                <p class="subtitle">Chào mừng bạn quay lại</p>
+
+                <!-- Hộp báo lỗi tổng (MSG 6, MSG 9) -->
+                <div id="global-error" class="global-error"></div>
+
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="duong@gmail.com">
+                        <div id="email-error" class="error-message">Vui lòng nhập email.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" id="password" placeholder="••••••••">
+                        <div id="caps-warning" class="caps-lock-warning">
+                            ⚠️ Caps Lock đang bật
+                        </div>
+                        <div id="password-error" class="error-message">Vui lòng nhập mật khẩu.</div>
+                    </div>
+
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="remember_me">
+                        Ghi nhớ đăng nhập
+                    </label>
+
+                    <button type="submit" id="btn-submit" class="btn-submit">Đăng nhập</button>
+                </form>
+
+                <div class="links">
+                    <a href="/quen-mat-khau">Quên mật khẩu?</a>
+                    <span>Chưa có tài khoản? <a href="tao-tai-khoan.html">Đăng nhập</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // B2 & CBR 3: Kiểm tra nếu đã đăng nhập thì chuyển thẳng tới Screen 5
+        //if (localStorage.getItem('jwt') || sessionStorage.getItem('jwt')) {
+            //window.location.href = '/screen5.html';
+        //}
+
+        const form = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const rememberCheckbox = document.getElementById('remember_me');
+        const capsWarning = document.getElementById('caps-warning');
+        const globalError = document.getElementById('global-error');
+        const btnSubmit = document.getElementById('btn-submit');
+
+        // Logic phát hiện Caps Lock
+        function checkCapsLock(e) {
+            if (e.getModifierState && e.getModifierState('CapsLock')) {
+                capsWarning.style.display = 'flex';
+            } else {
+                capsWarning.style.display = 'none';
+            }
+        }
+        passwordInput.addEventListener('keyup', checkCapsLock);
+        passwordInput.addEventListener('mousedown', checkCapsLock);
+
+        // Reset lỗi hiển thị
+        function clearErrors() {
+            globalError.style.display = 'none';
+            globalError.innerText = '';
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('input').forEach(el => el.classList.remove('input-error'));
+        }
+
+        function showFieldError(inputId, message) {
+            const inputEl = document.getElementById(inputId);
+            const errorEl = document.getElementById(`${inputId}-error`);
+            inputEl.classList.add('input-error');
+            errorEl.innerText = message;
+            errorEl.style.display = 'block';
+        }
+
+        function showGlobalError(message) {
+            globalError.innerText = message;
+            globalError.style.display = 'block';
+        }
+
+        // Logic giới hạn đăng nhập sai (Mock B5: 10 lần / 15 phút)
+        function checkRateLimit() {
+            const blockTime = localStorage.getItem('loginBlockTime');
+            if (blockTime && new Date().getTime() < parseInt(blockTime)) {
+                return true; // Đang bị khóa
+            } else if (blockTime) {
+                localStorage.removeItem('loginBlockTime');
+                localStorage.removeItem('failedAttempts');
+            }
+            return false;
+        }
+
+        function incrementFailedAttempts() {
+            let attempts = parseInt(localStorage.getItem('failedAttempts') || '0') + 1;
+            localStorage.setItem('failedAttempts', attempts);
+            
+            if (attempts >= 10) {
+                // Khóa 15 phút
+                const unblockTime = new Date().getTime() + 15 * 60 * 1000;
+                localStorage.setItem('loginBlockTime', unblockTime);
+                return true; // Vừa chạm ngưỡng khóa
+            }
+            return false;
+        }
+
+        // Xử lý Submit
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearErrors();
+
+            // Kiểm tra giới hạn (B5)
+            if (checkRateLimit()) {
+                showGlobalError("Bạn thử quá nhiều lần. Vui lòng thử lại sau 15 phút."); // MSG 9
+                btnSubmit.disabled = true;
+                return;
+            }
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            let isValid = true;
+
+            // B4: Kiểm tra dữ liệu rỗng
+            if (!email) {
+                showFieldError('email', "Vui lòng nhập email."); // MSG 1
+                isValid = false;
+            }
+            if (!password) {
+                showFieldError('password', "Vui lòng nhập mật khẩu."); // MSG 2
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Mock: Giả lập gọi API đăng nhập (B6, B7)
+            try {
+                // Mock test case: Nhập email "sai@gmail.com" để test MSG 6, MSG 9
+                if (email === 'sai@gmail.com') {
+                    const isBlocked = incrementFailedAttempts();
+                    if (isBlocked) {
+                        showGlobalError("Bạn thử quá nhiều lần. Vui lòng thử lại sau 15 phút."); // MSG 9
+                        btnSubmit.disabled = true;
+                    } else {
+                        showGlobalError("Email hoặc mật khẩu không đúng. Vui lòng thử lại."); // MSG 6
+                    }
+                    return;
+                }
+
+                // Nếu đúng (mặc định các email khác) -> Thực hiện B7
+                const mockJWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.login_token";
+                
+                // Lưu token dựa trên trạng thái "Ghi nhớ đăng nhập"
+                if (rememberCheckbox.checked) {
+                    localStorage.setItem('jwt', mockJWT);
+                } else {
+                    sessionStorage.setItem('jwt', mockJWT);
+                }
+
+                // Chuyển hướng theo param 'next' hoặc về Screen 5
+                const urlParams = new URLSearchParams(window.location.search);
+                const nextUrl = urlParams.get('next');
+                
+                if (nextUrl && nextUrl.startsWith('/')) {
+                    window.location.href = nextUrl;
+                } else {
+                    window.location.href = '/screen5.html';
+                }
+
+            } catch (err) {
+                console.error("Lỗi đăng nhập", err);
+            }
+        });
+    </script>
+</body>
+</html>
