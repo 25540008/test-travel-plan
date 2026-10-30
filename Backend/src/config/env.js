@@ -12,7 +12,7 @@ export const env = {
   isTest: nodeEnv === 'test',
   port: Number(process.env.PORT) || 3000,
   jwtSecret: process.env.JWT_SECRET || 'dev-secret-doi-truoc-khi-deploy',
-  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '24h',
   // Danh sách origin cách nhau bởi dấu phẩy; để trống = cho phép mọi origin (chỉ nên dùng khi dev).
   corsOrigins: (process.env.CORS_ORIGINS || '')
     .split(',')
